@@ -10,12 +10,18 @@ if(isset($_GET['url'])) {
 	system('./phantomjs rasterize.js '.$url.' '.$file);
 	
 	list($width, $height) = getimagesize($file);
-	$new_width = $width;
+	$new_width = isset($_GET['ancho'])?$_GET['ancho']:$width;
+	if($new_width != $width) {
+		$scale = floatval($width)/floatval($new_width);
+	}
+	else {
+		$scale = 1;
+	}
 	$new_height = isset($_GET['alto'])?$_GET['alto']:$height;
 	$imagen_orig = imagecreatefrompng($file);
 	$imagen = imagecreatetruecolor($new_width, $new_height);
 	
-	imagecopyresampled($imagen, $imagen_orig, 0, 0, 0, 0, $new_width, $new_height, $width, $new_height);
+	imagecopyresampled($imagen, $imagen_orig, 0, 0, 0, 0, $new_width, $new_height, $width, $new_height*$scale);
 	$new_file = str_replace('.png', '.crop.png', $file);
 	imagepng($imagen, $new_file, 7);
 	
