@@ -7,7 +7,8 @@ if(isset($_GET['url'])) {
 	
 	$url = 'http://'.$_GET['url'];
 	$file = 'images/'.$_GET['url'].'.png';
-	system('./phantomjs rasterize.js '.$url.' '.$file);
+	// Asumimos que phantomjs ya esta instalado en el sistema
+	system('phantomjs rasterize.js '.$url.' '.$file);
 	
 	list($width, $height) = getimagesize($file);
 	$new_width = isset($_GET['ancho'])?$_GET['ancho']:$width;
